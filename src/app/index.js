@@ -26,37 +26,49 @@ var BoardComponent = React.createClass({
         return(
             <div>
                 <h1>Camper Leaderboard</h1>
-                <Camper campers={this.state.campers} />
+                <table>
+                    <thead className="theader">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Username</th>
+                            <th id="recent" onClick={this.toggleDisplay}>Points in past 30 days</th>
+                            <th id="alltime" onClick={this.toggleDisplay}>All Time Points</th>
+                        </tr>
+                    </thead>
+                    <Camper campers={this.state.campers} />
+                </table>
             </div>
         );
+    },
+
+    toggleDisplay: function(e) {
+        const key = e.target.id;
+        const campers = this.state.campers;
+        const desc = campers.sort(function(a, b) {
+                return b[key] - a[key];
+        })
+
+        this.setState({
+            campers: desc
+        });
     },
 });
 
 var Camper = React.createClass({
     render: function() {
         return(
-            <table>
-                <tbody>
-                    <tr>
-                        <td>Rank</td>
-                        <td>Username</td>
-                        <td>Points in past 30 days</td>
-                        <td>All Time Points</td>
-                    </tr>
-                </tbody>
+            <tbody>
             {this.props.campers.map(function(camper, index) {
                 return (
-                    <tbody key={index}>
-                        <tr>
-                            <td>{index + 1}</td>
-                            <td><img className="icon" src={camper.img}/>  {camper.username}</td>
-                            <td>{camper.recent}</td>
-                            <td>{camper.alltime}</td>
-                        </tr>
-                    </tbody>
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td><img className="icon" src={camper.img}/>  {camper.username}</td>
+                        <td>{camper.recent}</td>
+                        <td>{camper.alltime}</td>
+                    </tr>
                 );
             })}
-            </table>
+            </tbody>
         )
     }
 });
